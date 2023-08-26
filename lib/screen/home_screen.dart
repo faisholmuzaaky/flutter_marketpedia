@@ -28,6 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final CarouselController _controller = CarouselController();
 
   @override
+  void initState() {
+    context.read<ProductCubit>().getAllProducts();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -161,35 +167,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget newArrivals() {
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<ProductCubit, ProductState>(
+      builder: (context, state) {
+        if (state is ProductSuccess) {
+          return Column(
             children: [
-              Text(
-                'New Arrivals',
-                style: blackTextStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: medium,
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'New Arrivals',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: medium,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'View More >',
+                        style: orangeTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  'View More >',
-                  style: orangeTextStyle.copyWith(
-                    fontWeight: medium,
-                  ),
-                ),
-              ),
+              Column(
+                children: state.products
+                    .map(
+                      (item) => Container(
+                        margin: EdgeInsets.only(
+                          bottom: state.products.indexOf(item) ==
+                                  state.products.length - 1
+                              ? 120
+                              : 24,
+                        ),
+                        child: ListProduct(
+                          product: item,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              )
             ],
-          ),
-        ),
-        ListProduct(),
-        ListProduct(),
-      ],
+          );
+        }
+        return Container();
+      },
     );
   }
 }

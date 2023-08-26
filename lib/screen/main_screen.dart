@@ -38,7 +38,14 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget cartButton() {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CartScreen(),
+          ),
+        );
+      },
       backgroundColor: blackColor,
       child: const Icon(
         Icons.shopping_cart_outlined,

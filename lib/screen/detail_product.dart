@@ -1,7 +1,8 @@
 part of 'screen.dart';
 
 class DetailProduct extends StatefulWidget {
-  const DetailProduct({super.key});
+  final ProductModel product;
+  const DetailProduct({super.key, required this.product});
 
   @override
   State<DetailProduct> createState() => _DetailProductState();
@@ -14,12 +15,13 @@ class _DetailProductState extends State<DetailProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: whiteColor,
+      bottomNavigationBar: customBottom(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               CustomAppBar(
-                title: 'Marketpedia',
+                title: widget.product.productName!,
                 leading: true,
                 action: Icon(
                   Icons.favorite,
@@ -44,8 +46,8 @@ class _DetailProductState extends State<DetailProduct> {
       child: AspectRatio(
         aspectRatio: 16 / 9,
         child: Image.network(
-          'https://cyclopedia.id/web/image/product.product/372768/image_1024?unique=4f7d1df',
-          fit: BoxFit.cover,
+          widget.product.productPhoto!,
+          fit: BoxFit.fill,
         ),
       ),
     );
@@ -64,14 +66,16 @@ class _DetailProductState extends State<DetailProduct> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Cooper Mount Bike',
+                      widget.product.productName!,
                       style: blackTextStyle.copyWith(
                         fontSize: 18,
                         fontWeight: semiBold,
                       ),
                     ),
                     Text(
-                      '\$570.0',
+                      NumberFormat.currency(
+                              locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                          .format(int.parse(widget.product.productValue!)),
                       style: blackTextStyle.copyWith(
                         fontSize: 18,
                         fontWeight: semiBold,
@@ -100,7 +104,7 @@ class _DetailProductState extends State<DetailProduct> {
             height: defaultMargin,
           ),
           Text(
-            'Lightweight SmartForm C2 Alloy, 12x142 thru-axle, tapered headtube, BSA threaded BBm flat mount disc, StraightShot internal cable routing, multiple gear/bottle mounts',
+            widget.product.productDescription!,
             style: blackTextStyle,
           ),
           SizedBox(
@@ -138,6 +142,47 @@ class _DetailProductState extends State<DetailProduct> {
                   ),
                 )
                 .toList(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget customBottom() {
+    return Container(
+      height: 70,
+      margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            margin: EdgeInsets.only(right: defaultMargin),
+            decoration: BoxDecoration(
+              color: greyColor.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Icon(
+              Icons.shopping_bag_outlined,
+              size: 32,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              height: 50,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: orangeColor,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                'Add to Cart',
+                style: whiteTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: medium,
+                ),
+              ),
+            ),
           )
         ],
       ),

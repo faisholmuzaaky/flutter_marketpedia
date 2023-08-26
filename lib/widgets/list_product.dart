@@ -1,7 +1,8 @@
 part of 'widget.dart';
 
 class ListProduct extends StatelessWidget {
-  const ListProduct({super.key});
+  final ProductModel product;
+  const ListProduct({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +10,7 @@ class ListProduct extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const DetailProduct(),
+          builder: (context) => DetailProduct(product: product),
         ),
       ),
       child: Container(
@@ -18,7 +19,6 @@ class ListProduct extends StatelessWidget {
         margin: EdgeInsets.only(
           left: defaultMargin,
           right: defaultMargin,
-          bottom: defaultMargin,
         ),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -33,8 +33,11 @@ class ListProduct extends StatelessWidget {
               height: 120,
               margin: const EdgeInsets.only(right: 14),
               decoration: BoxDecoration(
-                color: whiteColor,
+                // color: whiteColor,
                 borderRadius: BorderRadius.circular(6),
+                image: DecorationImage(
+                  image: NetworkImage(product.productPhoto!),
+                ),
               ),
             ),
             Expanded(
@@ -43,11 +46,13 @@ class ListProduct extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    'Cooper Mount Bike',
+                    product.productName!,
                     style: blackTextStyle.copyWith(fontSize: 16),
                   ),
                   Text(
-                    '\$570.0',
+                    NumberFormat.currency(
+                            locale: 'id', symbol: 'Rp ', decimalDigits: 0)
+                        .format(int.parse(product.productValue!)),
                     style: blackTextStyle.copyWith(
                       fontWeight: semiBold,
                       fontSize: 18,
@@ -66,7 +71,7 @@ class ListProduct extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orangeColor,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -82,16 +87,19 @@ class ListProduct extends StatelessWidget {
                 const SizedBox(
                   height: 32,
                 ),
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: greyColor.withOpacity(0.2),
+                GestureDetector(
+                  onTap: () => context.read<CartCubit>().addCart(product),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: greyColor.withOpacity(0.2),
+                      ),
                     ),
+                    child: const Icon(Icons.add),
                   ),
-                  child: const Icon(Icons.add),
                 ),
               ],
             )
