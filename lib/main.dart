@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_marketpedia/cubit/cart_cubit.dart';
 import 'package:flutter_marketpedia/cubit/product_cubit.dart';
 import 'package:flutter_marketpedia/screen/screen.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           create: (context) => CartCubit(),
         ),
       ],
-      child: const MaterialApp(
+      child: const GetMaterialApp(
         debugShowCheckedModeBanner: false,
         home: MainScreen(),
       ),

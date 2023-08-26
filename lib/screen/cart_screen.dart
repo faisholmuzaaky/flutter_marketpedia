@@ -5,23 +5,61 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<CartCubit>().getallCart();
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomAppBar(
-                title: 'Your Cart',
-                leading: true,
-                ontap: () => Navigator.pop(context),
+      body: body(),
+    );
+  }
+
+  Widget body() {
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, state) {
+        if (state is CartSuccess && state.cart.isNotEmpty) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomAppBar(
+                    title: 'Your Cart',
+                    leading: true,
+                    ontap: () => Get.back(),
+                  ),
+                  cartList(),
+                  billingInformation(),
+                  buttonCheckOut(),
+                ],
               ),
-              cartList(),
-              billingInformation(),
-              buttonCheckOut(),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomAppBar(
+                    title: 'Your Cart',
+                    leading: true,
+                    ontap: () => Get.back(),
+                  ),
+                  NoContent(
+                    icon: Icon(
+                      Icons.shopping_cart,
+                      color: orangeColor,
+                      size: 90,
+                    ),
+                    title: 'Opss! Your Cart is Empty',
+                    message: 'Lets find something for you',
+                    buttoTittle: 'Explore Product',
+                    buttonWidth: 150,
+                    buttonHeight: 48,
+                    onTap: () => Get.to(const MainScreen()),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -153,33 +191,55 @@ class CartScreen extends StatelessWidget {
   }
 
   Widget buttonCheckOut() {
-    return Container(
-      width: double.infinity,
-      height: 48,
-      margin: EdgeInsets.all(defaultMargin),
-      padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-      decoration: BoxDecoration(
-        color: orangeColor,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            color: whiteColor,
-            size: 28,
-          ),
-          Text(
-            'Checkout',
-            style: whiteTextStyle.copyWith(
-              fontSize: 16,
-              fontWeight: medium,
+    return BlocConsumer<CartCubit, CartState>(
+      listener: (context, state) {
+        if (state is CartCheckoutSuccess) {
+          Get.to(
+            const MainScreen(),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is CartLoading) {
+          return Container(
+            margin: EdgeInsets.only(top: defaultMargin),
+            child: CircularProgressIndicator(
+              color: orangeColor,
+            ),
+          );
+        }
+        return GestureDetector(
+          onTap: () => context.read<CartCubit>().checkOut(),
+          child: Container(
+            width: double.infinity,
+            height: 48,
+            margin: EdgeInsets.all(defaultMargin),
+            padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+            decoration: BoxDecoration(
+              color: orangeColor,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.shopping_cart_outlined,
+                  color: whiteColor,
+                  size: 28,
+                ),
+                Text(
+                  'Checkout',
+                  style: whiteTextStyle.copyWith(
+                    fontSize: 16,
+                    fontWeight: medium,
+                  ),
+                ),
+                const SizedBox(),
+              ],
             ),
           ),
-          const SizedBox(),
-        ],
-      ),
+        );
+      },
     );
   }
 }

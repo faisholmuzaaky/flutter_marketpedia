@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_marketpedia/services/service.dart';
 
 import '../models/model.dart';
 
@@ -10,12 +11,22 @@ class CartCubit extends Cubit<CartState> {
 
   List<CartModel> cart = [];
 
-  addCart(ProductModel product) async {
+  getallCart() {
+    emit(CartSuccess(cart));
+  }
+
+  addCart(ProductModel product, {String? size}) async {
     emit(CartLoading());
+    print(size);
     if (productIsexist(product)) {
-      int index = cart.indexWhere(
-          (element) => element.product!.productId == product.productId);
+      int index = cart.indexWhere((element) =>
+          element.product!.productId == product.productId &&
+          element.product!.productSize == size);
+      print('index : $index');
       cart[index].quantity = cart[index].quantity! + 1;
+      // if (size != null) {
+      //   cart[index].product!.productSize = size;
+      // }
     } else {
       final data = CartModel(
         id: '${cart.length}',
@@ -24,13 +35,19 @@ class CartCubit extends Cubit<CartState> {
       );
       cart.add(data);
     }
-    emit(CartSuccess(cart));
+    emit(CartSubmit());
   }
 
   productIsexist(ProductModel product) {
-    if (cart.indexWhere(
+    final isProductIdSame = cart.indexWhere(
             (element) => element.product!.productId == product.productId) ==
-        -1) {
+        -1;
+    final isProductSizeSame = cart.indexWhere(
+            (element) => element.product!.productSize == product.productSize) ==
+        -1;
+    print('isProductIdSame : $isProductIdSame');
+    print('isProductSizeSame : $isProductSizeSame');
+    if (isProductIdSame || isProductSizeSame) {
       return false;
     }
     return true;
@@ -64,5 +81,22 @@ class CartCubit extends Cubit<CartState> {
       price += (item.quantity! * int.parse(item.product!.productValue!));
     }
     return price;
+  }
+
+  checkOut() async {
+    emit(CartLoading());
+    await Future.delayed(const Duration(seconds: 2));
+    if (cart.isNotEmpty) {
+      final res = await ProductServices().checkout(cart: cart);
+      if (res.value!) {
+        cart.clear();
+        emit(CartInitial());
+        emit(CartCheckoutSuccess());
+      } else {
+        emit(const CartFailed('Failed to Checkout'));
+      }
+    } else {
+      emit(const CartFailed('Failed to Checkout'));
+    }
   }
 }

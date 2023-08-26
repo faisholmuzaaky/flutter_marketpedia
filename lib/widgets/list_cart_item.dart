@@ -54,7 +54,7 @@ class ListItemCart extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Size : XL',
+                  'Size : ${cart.product!.productSize}',
                   style: blackTextStyle,
                 ),
               ],
@@ -86,7 +86,20 @@ class ListItemCart extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => context.read<CartCubit>().reduceQuantity(cart),
+                onTap: () {
+                  if (cart.quantity! == 1) {
+                    customDialog(
+                      title: 'Confirm Delete',
+                      message: 'Are you sure you want to delete this item?',
+                      ontapConfirm: () {
+                        context.read<CartCubit>().reduceQuantity(cart);
+                        Get.back();
+                      },
+                    );
+                  } else {
+                    context.read<CartCubit>().reduceQuantity(cart);
+                  }
+                },
                 child: Container(
                   width: 28,
                   height: 28,

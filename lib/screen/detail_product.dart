@@ -10,7 +10,7 @@ class DetailProduct extends StatefulWidget {
 
 class _DetailProductState extends State<DetailProduct> {
   List<String> size = ['S', 'M', 'L', 'XL'];
-  int? currentIndex;
+  int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class _DetailProductState extends State<DetailProduct> {
                   color: greyColor.withOpacity(0.4),
                   size: 32,
                 ),
-                ontap: () => Navigator.pop(context),
+                ontap: () => Get.back(),
               ),
               imageProduct(),
               productDetails(),
@@ -149,43 +149,69 @@ class _DetailProductState extends State<DetailProduct> {
   }
 
   Widget customBottom() {
-    return Container(
-      height: 70,
-      margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            margin: EdgeInsets.only(right: defaultMargin),
-            decoration: BoxDecoration(
-              color: greyColor.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              size: 32,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              height: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: orangeColor,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                'Add to Cart',
-                style: whiteTextStyle.copyWith(
-                  fontSize: 16,
-                  fontWeight: medium,
+    return BlocConsumer<CartCubit, CartState>(
+      listener: (context, state) {
+        if (state is CartSubmit) {
+          if (!Get.isSnackbarOpen) {
+            customSnackBar(
+              title: 'Horray!',
+              message: 'The product has been added to cart',
+            );
+          }
+        }
+      },
+      builder: (context, state) {
+        return Container(
+          height: 70,
+          margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => Get.to(const CartScreen()),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  margin: EdgeInsets.only(right: defaultMargin),
+                  decoration: BoxDecoration(
+                    color: greyColor.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 32,
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    final data = widget.product
+                        .copyWith(productSize: size[currentIndex]);
+                    context
+                        .read<CartCubit>()
+                        .addCart(data, size: size[currentIndex]);
+                  },
+                  child: Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: orangeColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'Add to Cart',
+                      style: whiteTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -8,6 +8,7 @@ class ProductModel {
   String? productValue;
   String? productType;
   String? productPhoto;
+  String? productSize;
 
   ProductModel({
     this.no,
@@ -17,6 +18,7 @@ class ProductModel {
     this.productValue,
     this.productType,
     this.productPhoto,
+    this.productSize,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> data) => ProductModel(
@@ -27,6 +29,7 @@ class ProductModel {
         productValue: data['productValue'],
         productType: data['productType'],
         productPhoto: data['productPhoto'],
+        productSize: 'S',
       );
 
   toJson() {
@@ -40,4 +43,25 @@ class ProductModel {
       'productPhoto': productPhoto,
     };
   }
+
+  ProductModel copyWith({
+    int? no,
+    String? productId,
+    String? productName,
+    String? productDescription,
+    String? productValue,
+    String? productType,
+    String? productPhoto,
+    String? productSize,
+  }) =>
+      ProductModel(
+        no: no ?? this.no,
+        productId: productId ?? this.productId,
+        productName: productName ?? this.productName,
+        productDescription: productDescription ?? this.productDescription,
+        productValue: productValue ?? this.productValue,
+        productType: productType ?? this.productType,
+        productPhoto: productPhoto ?? this.productPhoto,
+        productSize: productSize ?? this.productSize,
+      );
 }

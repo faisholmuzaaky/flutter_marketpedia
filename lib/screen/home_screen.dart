@@ -8,6 +8,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late StreamSubscription internetSubs;
+  bool hasInternet = false;
   List<String> imageList = [
     'assets/images/1.jpg',
     'assets/images/2.jpg',
@@ -30,29 +32,40 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     context.read<ProductCubit>().getAllProducts();
+    // internetSubs = InternetConnectionChecker().onStatusChange.listen((status) {
+    //   hasInternet = status == InternetConnectionStatus.connected;
+    //   print(hasInternet);
+    //   setState(() {
+    //     this.hasInternet = hasInternet;
+    //   });
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const CustomAppBar(
-                title: 'Marketpedia',
-                action: Icon(
-                  Icons.notifications_none_rounded,
-                  size: 32,
-                ),
+      body: body(),
+    );
+  }
+
+  Widget body() {
+    return SafeArea(
+      bottom: false,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const CustomAppBar(
+              title: 'Marketpedia',
+              action: Icon(
+                Icons.notifications_none_rounded,
+                size: 32,
               ),
-              imageCarousel(),
-              topCategories(),
-              newArrivals(),
-            ],
-          ),
+            ),
+            imageCarousel(),
+            topCategories(),
+            newArrivals(),
+          ],
         ),
       ),
     );
@@ -81,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           options: CarouselOptions(
             height: 200,
             viewportFraction: 1,
-            autoPlay: true,
+            autoPlay: false,
             onPageChanged: (index, reason) {
               setState(() {
                 _current = index;
