@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_marketpedia/cubit/cart_cubit.dart';
+import 'package:flutter_marketpedia/cubit/internet_cubit.dart';
 import 'package:flutter_marketpedia/cubit/product_cubit.dart';
 import 'package:flutter_marketpedia/shared/shared.dart';
 import 'package:flutter_marketpedia/widgets/widget.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 // import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
+import '../cubit/transaction_cubit.dart';
 import '../models/model.dart';
 
 part 'main_screen.dart';

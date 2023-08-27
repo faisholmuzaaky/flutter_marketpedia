@@ -1,5 +1,7 @@
 part of 'shared.dart';
 
+final box = GetStorage();
+
 SnackbarController customSnackBar({
   required String title,
   required String message,
@@ -103,4 +105,30 @@ customDialog({
       ],
     ),
   );
+}
+
+Stream<bool> streamInternetConnection() async* {
+  bool result = false;
+  InternetConnectionChecker().onStatusChange.listen((event) {
+    result = event == InternetConnectionStatus.connected;
+  });
+  yield result;
+  // if (result) {
+  //   yield true;
+  // } else {
+  //   yield false;
+  // }
+}
+
+void saveAllCart(List<CartModel> cart) {
+  removeCartFromLocal();
+  box.write('cart', cart);
+}
+
+getAllCartFromLocal() {
+  return box.read('cart') ?? [];
+}
+
+void removeCartFromLocal() {
+  box.remove('cart');
 }

@@ -12,8 +12,8 @@ class CartModel {
     this.quantity,
     this.check = false,
   });
-  factory CartModel.fromJson(String id, Map<String, dynamic> data) => CartModel(
-        id: id,
+  factory CartModel.fromJson(Map<String, dynamic> data) => CartModel(
+        id: data['id'],
         product: ProductModel.fromJson(data['product']),
         quantity: data['quantity'],
         check: data['check'],

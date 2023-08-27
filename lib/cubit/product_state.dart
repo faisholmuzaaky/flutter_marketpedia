@@ -24,3 +24,10 @@ final class ProductFailed extends ProductState {
   @override
   List<Object> get props => [message];
 }
+
+final class ProductTransaction extends ProductState {
+  final List<TransactionModel> transaction;
+  const ProductTransaction(this.transaction);
+  @override
+  List<Object> get props => [transaction];
+}

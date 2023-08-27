@@ -31,14 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    context.read<ProductCubit>().getAllProducts();
-    // internetSubs = InternetConnectionChecker().onStatusChange.listen((status) {
-    //   hasInternet = status == InternetConnectionStatus.connected;
-    //   print(hasInternet);
-    //   setState(() {
-    //     this.hasInternet = hasInternet;
-    //   });
-    // });
+    context.read<InternetCubit>().checkConnection();
     super.initState();
   }
 
@@ -50,24 +43,75 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget body() {
-    return SafeArea(
-      bottom: false,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const CustomAppBar(
-              title: 'Marketpedia',
-              action: Icon(
-                Icons.notifications_none_rounded,
-                size: 32,
+    return BlocConsumer<InternetCubit, InternetState>(
+      listener: (context, state) {
+        if (state is InternetConnected) {
+          context.read<ProductCubit>().getAllProducts();
+        } else {
+          if (!Get.isSnackbarOpen) {
+            customSnackBar(
+              title: 'Offline',
+              message: 'Please check your internet connection',
+            );
+          }
+        }
+      },
+      builder: (context, state) {
+        context.read<ProductCubit>().getAllProducts();
+        if (state is InternetConnected) {
+          return SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const CustomAppBar(
+                    title: 'Marketpedia',
+                    action: Icon(
+                      Icons.notifications_none_rounded,
+                      size: 32,
+                    ),
+                  ),
+                  imageCarousel(),
+                  topCategories(),
+                  newArrivals(),
+                ],
               ),
             ),
-            imageCarousel(),
-            topCategories(),
-            newArrivals(),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const CustomAppBar(
+                    title: 'Marketpedia',
+                    action: Icon(
+                      Icons.notifications_none_rounded,
+                      size: 32,
+                    ),
+                  ),
+                  NoContent(
+                    icon: Icon(
+                      Icons.wifi_off,
+                      color: orangeColor,
+                      size: 100,
+                    ),
+                    title: 'Your connection are lost',
+                    message:
+                        'Please check your internet connection\nand try again',
+                    buttoTittle: 'Refresh',
+                    buttonWidth: 150,
+                    buttonHeight: 48,
+                    onTap: () =>
+                        context.read<InternetCubit>().checkConnection(),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 

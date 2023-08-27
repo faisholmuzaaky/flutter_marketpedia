@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_marketpedia/cubit/cart_cubit.dart';
+import 'package:flutter_marketpedia/cubit/product_cubit.dart';
 import 'package:flutter_marketpedia/screen/screen.dart';
 import 'package:get/get.dart';
 // import 'package:get/get.dart';
@@ -17,3 +18,6 @@ part 'list_size.dart';
 part 'list_cart_item.dart';
 part 'dashed_line.dart';
 part 'no_content.dart';
+part 'item_list.dart';
+part 'list_item_transaction.dart';
+part 'custom_search_field.dart';

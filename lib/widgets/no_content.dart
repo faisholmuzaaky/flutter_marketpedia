@@ -42,6 +42,7 @@ class NoContent extends StatelessWidget {
           Text(
             message,
             style: greyTextStyle,
+            textAlign: TextAlign.center,
           ),
           const SizedBox(
             height: 18,
