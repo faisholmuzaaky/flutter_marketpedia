@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/icons/icons8-bike-100.png',
   ];
 
-  int _current = 0;
   final CarouselController _controller = CarouselController();
 
   @override
@@ -138,17 +137,16 @@ class _HomeScreenState extends State<HomeScreen> {
           options: CarouselOptions(
             height: 200,
             viewportFraction: 1,
-            autoPlay: false,
+            autoPlay: true,
             onPageChanged: (index, reason) {
-              setState(() {
-                _current = index;
-              });
+              context.read<CarouselCubit>().setCarousel(index);
             },
           ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: imageList.asMap().entries.map((entry) {
+            // print(context.watch<CarouselCubit>().index);
             return GestureDetector(
               onTap: () => _controller.animateToPage(entry.key),
               child: Container(
@@ -160,7 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _current == entry.key ? blackColor : greyColor,
+                  color: context.watch<CarouselCubit>().index == entry.key
+                      ? blackColor
+                      : greyColor,
                 ),
               ),
             );

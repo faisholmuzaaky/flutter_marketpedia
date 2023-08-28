@@ -11,7 +11,7 @@ class ProductCubit extends Cubit<ProductState> {
   ProductCubit() : super(ProductInitial());
 
   Future<void> getAllProducts() async {
-    emit(ProductLoading());
+    // emit(ProductLoading());
     ApiReturnValue<List<ProductModel>> result =
         await ProductServices().getAllProducts();
 

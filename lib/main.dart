@@ -8,6 +8,8 @@ import 'package:flutter_marketpedia/screen/screen.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'cubit/carosel_cubit.dart';
+
 void main() async {
   await GetStorage.init();
   runApp(const MyApp());
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<CarouselCubit>(
+          create: (context) => CarouselCubit(),
+        ),
         BlocProvider<InternetCubit>(
           create: (context) => InternetCubit(),
         ),

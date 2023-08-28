@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 // import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
+import '../cubit/carosel_cubit.dart';
 import '../cubit/transaction_cubit.dart';
 import '../models/model.dart';
 

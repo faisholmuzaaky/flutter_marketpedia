@@ -27,6 +27,7 @@ class CartCubit extends Cubit<CartState> {
           cart.add(CartModel.fromJson(element));
         }
       }
+      saveAllCart(cart);
 
       emit(CartSuccess(cart));
     }
